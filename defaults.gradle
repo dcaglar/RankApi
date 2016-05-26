@@ -1,0 +1,27 @@
+apply plugin: 'jacoco'
+apply plugin: 'java'
+
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
+sourceSets {
+    main.output.resourcesDir = 'build/classes/main'
+    test.output.resourcesDir = 'build/classes/test'
+}
+
+task wrapper(type: Wrapper) {
+    description = 'Generate the Gradle wrapper.'
+    gradleVersion = '2.4'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'utf-8'
+}
+
+test {
+    systemProperties = System.getProperties()
+    systemProperties 'java.awt.headless': 'true'
+
+    testLogging.exceptionFormat = 'full'
+}

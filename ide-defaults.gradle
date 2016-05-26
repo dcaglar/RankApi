@@ -1,0 +1,25 @@
+import org.gradle.plugins.ide.eclipse.model.SourceFolder
+
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+idea {
+    module {
+        inheritOutputDirs = false
+        outputDir = file('build/classes/main')
+        testOutputDir = file('build/classes/test')
+    }
+}
+
+eclipse.classpath {
+    file {
+        beforeMerged { classpath ->
+            classpath.entries.clear()
+        }
+        whenMerged {  cp ->
+            cp.entries.findAll { it instanceof SourceFolder && it.path.startsWith('src/main/') }*.output = 'build/classes/main'
+            cp.entries.findAll { it instanceof SourceFolder && it.path.startsWith('src/test/') }*.output = 'build/classes/test'
+            cp.entries.removeAll { it.kind == 'output' }
+        }
+    }
+}
